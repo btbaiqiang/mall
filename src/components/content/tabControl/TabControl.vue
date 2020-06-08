@@ -9,27 +9,27 @@
 </template>
 
 <script>
-export default {
-  name: 'TabControl',
-  props: {
-    titles: {
-      type: Array,
-      default() {
-        return []
+  export default {
+    name: 'TabControl',
+    props: {
+      titles: {
+        type: Array,
+        default() {
+          return []
+        }
       }
-    }
-  },
-  data() {
-      return {
-        currentIndex: 0
-      }
-  },
-  methods: { 
-    itemClick(index) {
-      this.currentIndex = index
-    } 
-  }  
-}
+    },
+    data() {
+        return {
+          currentIndex: 0
+        }
+    },
+    methods: { 
+      itemClick(index) {
+        this.currentIndex = index
+      } 
+    }  
+  }
 </script>
 
 <style>
@@ -39,6 +39,7 @@ export default {
     font-size: 15px;
     height: 40px;
     line-height: 40px;
+    background-color: #fff;
   }
 
   .tab-control-itme {
