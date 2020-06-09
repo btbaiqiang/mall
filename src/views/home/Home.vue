@@ -4,89 +4,11 @@
     <home-swiper :banners="banners"/>
     <recommend-view :recommends="recommends" />
     <feature-view/>
-    <tab-control  class="tab-control" :titles="['流行','新款','精选']" />
-    <goods-list :goods="goods['pop'].list " />
-    <ul>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-      <li>列表清单</li>
-    </ul>  
+    <tab-control  class="tab-control" 
+    :titles="['流行','新款','精选']"
+    @tabClick="tabClick" />
+    <goods-list :goods="showGoods" />
+
   </div>
 </template>
 
@@ -125,7 +47,8 @@
           'pop': {page: 0 , list: []},
           'new': {page: 0, list: []},
           'sell': {page: 0, list: []},
-        }
+        },
+        currentType: 'pop',
       }
     },
     //页面创建时使用生命周期函数发起请求
@@ -149,7 +72,27 @@
       this.getHomeGoods('sell')
     },
     methods: {
-       //1、请求多个数据(返回promise)
+      /**
+       *事件监听的相关方法
+       */
+      //监听TabControl组件传过来的事件数据
+      tabClick(index) {
+        switch(index) {
+          case 0:
+            this.currentType = 'pop'
+            back;
+          case 1:
+            this.currentType = 'new'
+            back;
+          case 2:
+            this.currentType = 'sell'
+            bace
+        }
+      },
+      /**
+       *网络请求相关方法
+       */ 
+      //1、请求多个数据(返回promise)
       getHomeMultidata() {
         getHomeMultidata().then(res => {
         // console.log(res);
@@ -167,7 +110,12 @@
         this.goods[type].page += 1
       })
       }
-    }
+    },
+    computed: {
+      showGoods() {
+        return this.goods[this.currentType].list
+      }
+  }
   }
 </script>
 
@@ -189,6 +137,7 @@
   .tab-control {
     position: sticky;
     top: 44px;
+    z-index: 9;
   }
 
 </style>
