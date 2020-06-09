@@ -79,14 +79,14 @@
       tabClick(index) {
         switch(index) {
           case 0:
-            this.currentType = 'pop'
-            back;
+            this.currentType = 'pop';
+            break
           case 1:
             this.currentType = 'new'
-            back;
+            break
           case 2:
             this.currentType = 'sell'
-            bace
+            break
         }
       },
       /**
