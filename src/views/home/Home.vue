@@ -1,17 +1,22 @@
 <template>
   <div id="home">
     <nav-bar  class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <scroll class="content" ref="scroll">
+    <scroll class="content" 
+            ref="scroll"
+            :probeType="3" 
+            @scroll="contentScroll"
+            :pullUpLoad="true"
+            @pullingUp="loadMore"> 
       <home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends" />
       <feature-view/>
       <tab-control  class="tab-control" 
-        :titles="['流行','新款','精选']"
-        @tabClick="tabClick" />
+                    :titles="['流行','新款','精选']"
+                    @tabClick="tabClick" />
       <goods-list :goods="showGoods" />
     </scroll>
     <!--他用native监听组件根元素的原生事件-->
-    <back-top @click.native="backClick"/>
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -56,6 +61,7 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
+        isShowBackTop: false,
       }
     },
     //页面创建时使用生命周期函数发起请求
@@ -71,17 +77,25 @@
       // getHomeGoods('pop', 1).then(res => {
       //   console.log(res)
       // })
+
       //1、请求多个数据(返回promise)
       this.getHomeMultidata()
-      //请求商品数据
+      //2、请求商品数据
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
+    },
+    mounted() {
+       //3、监听item中图片加载完成/利用事件总线接收其他组件中发出来的事件
+      this.$bus.$on('itemloadImage', () => {
+        this.$refs.scroll.refresh()
+      })
     },
     methods: {
       /**
        *事件监听的相关方法
        */
+
       //监听TabControl组件传过来的事件数据
       tabClick(index) {
         switch(index) {
@@ -96,12 +110,28 @@
             break
         }
       },
+      //BackTop回到顶部
       backClick() {
         this.$refs.scroll.scrollTo(0, 0, 800)
       },
+      //BackTop组件的显示与隐藏
+      contentScroll(position) {
+        this.isShowBackTop = (-position.y) > 1000
+        // console.log(this.isShowBackTop)
+      },
+      //滚动加载更多
+      loadMore() {
+        // console.log('加载更多')
+        //调用网络请求函数并传入当前监听的类型
+        this.getHomeGoods(this.currentType)
+
+        // this.$refs.scroll.scroll.refresh()
+      },
+
       /**
        *网络请求相关方法
        */ 
+
       //1、请求多个数据(返回promise)
       getHomeMultidata() {
         getHomeMultidata().then(res => {
@@ -118,6 +148,7 @@
         //他用push压将一个列表压入到另一个列表
         this.goods[type].list.push(...res.data.list)
         this.goods[type].page += 1
+        this.$refs.scroll.finishPullUp()
       })
       }
     },
