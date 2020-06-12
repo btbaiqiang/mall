@@ -1,9 +1,11 @@
 <template>
   <div class="tab-control">
     <div v-for="(item, index) in titles" 
-      :key="index" class="tab-control-itme" 
-      :class="{active:index === currentIndex}" @click = "itemClick(index)">
-      <span>{{item}}</span>
+        :key="index" class="tab-control-itme" 
+        使用动态邦定属性:class
+        :class="{active:index === currentIndex}"
+        @click = "itemClick(index)">
+       <span>{{item}}</span>
     </div>
   </div>
 </template>
@@ -14,6 +16,7 @@
     props: {
       titles: {
         type: Array,
+        //当default返回值为数组或者对象时必须是个函数
         default() {
           return []
         }

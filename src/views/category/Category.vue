@@ -1,71 +1,8 @@
 <template>
-  <div class="wrapper">
-      <ul class="content">
-       
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项</li>
-        <li>列表项100</li>
+  <div class="wrapper" ref="wrapper">
+    <div>
       
-      </ul>
+    </div>
   </div>
 
 </template>

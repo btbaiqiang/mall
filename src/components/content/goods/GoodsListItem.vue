@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="">
+    <img :src="goodsItem.show.img" alt="" @load="loadImage">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -18,6 +18,13 @@
         default() {
           return {}
         }
+      }
+    },
+    methods: { 
+      // 监听图片加载完成
+      loadImage() {
+        //使用事件总线发射一个事件到总线中，必须在main.js里进行原型new
+        this.$bus.$emit('itemloadImage')
       }
     }
   }
