@@ -67,7 +67,7 @@
       
       </ul>
   </div>
-  
+
 </template>
 
 <script>
@@ -84,7 +84,15 @@
     },
     mounted() {
       this.scroll = new BScroll(document.querySelector('.wrapper'), {
+        probeType: 3,
+        pullUpload: true
+      })
+      this.scroll.on('scroll', (position) => {
+        // console.log(position)
+      })
 
+      this.scroll.on('pullingUp', () => {
+        console.log('上拉加载更多')
       })
     },
   
