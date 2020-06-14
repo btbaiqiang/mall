@@ -36,16 +36,21 @@
       })
 
       //2、监听滚动的位置
-      this.scroll.on('scroll', (position) => {
+      if (this.probeType ===2 || this.probeType === 3) {
+        this.scroll.on('scroll', (position) => {
         // console.log(position)
         this.$emit('scroll', position)
       })
+      }
 
       //3、监听上拉事件
-      this.scroll.on('pullingUp', () => {
+      if (this.pullUpLoad) {
+        this.scroll.on('pullingUp', () => {
         // console.log('上拉加载更多')
         this.$emit('pullingUp')
       })
+      }
+      
     },
     methods: { 
       scrollTo(x, y, time=500) {

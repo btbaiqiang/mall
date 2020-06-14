@@ -33,6 +33,7 @@
   import FeatureView from './childComps/FeatureView'
   //常用方法
   import {getHomeMultidata, getHomeGoods} from 'network/home'
+  import {debounce} from 'common/utils'
   
 
   export default {
@@ -48,7 +49,7 @@
       FeatureView
     },
     // 他用data()接收promise返回的数据
-    data() {
+    data() {E:\BROOT\Projects\Vue.js_demo\mall\.editorconfig
       return {
         //轮播图
         banners: [],
@@ -87,15 +88,17 @@
     },
     mounted() {
        //3、监听item中图片加载完成/利用事件总线接收其他组件中发出来的事件
+
+      const refresh = debounce(this.$refs.scroll.refresh, 1000)
       this.$bus.$on('itemloadImage', () => {
-        this.$refs.scroll.refresh()
+        refresh()
       })
     },
     methods: {
       /**
        *事件监听的相关方法
        */
-
+      
       //监听TabControl组件传过来的事件数据
       tabClick(index) {
         switch(index) {
@@ -148,6 +151,7 @@
         //他用push压将一个列表压入到另一个列表
         this.goods[type].list.push(...res.data.list)
         this.goods[type].page += 1
+        //完成上拉加载更多
         this.$refs.scroll.finishPullUp()
       })
       }
