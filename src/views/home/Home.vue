@@ -1,18 +1,24 @@
 <template>
+ 
   <div id="home">
-    <nav-bar  class="home-nav"><div slot="center">购物街</div></nav-bar>
+    <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+    <tab-control  class="tab-control" 
+              :titles="['流行','新款','精选']"
+              @tabClick="tabClick" 
+              ref="tabControl1" v-show="isTabFixed" />
     <scroll class="content" 
             ref="scroll"
             :probeType="3" 
             @scroll="contentScroll"
             :pullUpLoad="true"
             @pullingUp="loadMore"> 
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImageLoad='swiperImageLoad' />
       <recommend-view :recommends="recommends" />
       <feature-view/>
       <tab-control  class="tab-control" 
                     :titles="['流行','新款','精选']"
-                    @tabClick="tabClick" />
+                    @tabClick="tabClick" 
+                    ref="tabControl2" />
       <goods-list :goods="showGoods" />
     </scroll>
     <!--他用native监听组件根元素的原生事件-->
@@ -46,10 +52,10 @@
       BackTop,
       HomeSwiper,
       RecommendView,
-      FeatureView
+      FeatureView,
     },
     // 他用data()接收promise返回的数据
-    data() {E:\BROOT\Projects\Vue.js_demo\mall\.editorconfig
+    data() {
       return {
         //轮播图
         banners: [],
@@ -63,6 +69,9 @@
         },
         currentType: 'pop',
         isShowBackTop: false,
+        tabOffsetTop: 0,
+        isTabFixed: false,
+        saveY: 0,
       }
     },
     //页面创建时使用生命周期函数发起请求
@@ -88,8 +97,7 @@
     },
     mounted() {
        //3、监听item中图片加载完成/利用事件总线接收其他组件中发出来的事件
-
-      const refresh = debounce(this.$refs.scroll.refresh, 1000)
+      const refresh = this.debounce(this.$refs.scroll.refresh, 50)
       this.$bus.$on('itemloadImage', () => {
         refresh()
       })
@@ -98,6 +106,15 @@
       /**
        *事件监听的相关方法
        */
+      debounce(func, delay) {
+        let timer = null
+        return function (...args) {
+          if (timer) clearTimeout(timer)
+          timer = setTimeout(() => {
+            func.apply(this,args)     
+          }, delay)
+        }
+      },
       
       //监听TabControl组件传过来的事件数据
       tabClick(index) {
@@ -112,6 +129,8 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl1.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
       },
       //BackTop回到顶部
       backClick() {
@@ -119,8 +138,11 @@
       },
       //BackTop组件的显示与隐藏
       contentScroll(position) {
+        // 1、判断BackTop是否显示
         this.isShowBackTop = (-position.y) > 1000
-        // console.log(this.isShowBackTop)
+        
+        //2、决定tabControl是否吸顶(position: fixed) 
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       //滚动加载更多
       loadMore() {
@@ -129,6 +151,10 @@
         this.getHomeGoods(this.currentType)
 
         // this.$refs.scroll.scroll.refresh()
+      },
+      swiperImageLoad() {
+         //2、获取tabControl的offsetTop
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
       },
 
       /**
@@ -160,7 +186,20 @@
       showGoods() {
         return this.goods[this.currentType].list
       }
-  }
+    },
+    destroyed() {
+      console.log('home destroyed')
+    },
+    activated() {
+      //激活回到刚才的位置
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+      //滚动刷新
+      this.$refs.scroll.refresh()
+    },
+    deactivated() {
+      //释放时记录Y轴的位置
+      this.saveY = this.$refs.scroll.getScrollY()
+    },
   }
 </script>
 
@@ -173,19 +212,15 @@
   .home-nav {
     background-color: var(--color-tint);
     color: #fff;
+    /** 使用浏览器原生滚动使用的样式。*/
     position: fixed;
     left: 0;
     right: 0;
     top: 0;
     z-index: 9;
+    
   }
-
-  .tab-control {
-    position: sticky;
-    top: 44px;
-    z-index: 9;
-  }
-
+  
   .content {
     overflow: hidden;
 
@@ -194,6 +229,11 @@
     bottom: 49px;
     left: 0;
     right: 0;
+  }
+
+  .tab-control {
+    position: relative;
+    z-index: 9;
   }
 
 </style>

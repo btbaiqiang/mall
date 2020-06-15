@@ -1,9 +1,9 @@
 <template>
-  <div class="wrapper" ref="wrapper">
+  
     <div>
       
     </div>
-  </div>
+  
   
 </template>
 
@@ -16,15 +16,6 @@
         scroll: null
       }
     },
-    created() {
-   
-    },
-    mounted() {
-      this.scroll = new BScroll(document.querySelector('.wrapper'), {
-
-      })
-    },
-  
   }  
 </script>
 

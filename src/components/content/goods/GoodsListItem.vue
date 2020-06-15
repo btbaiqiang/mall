@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <img :src="goodsItem.show.img" alt="" @load="loadImage">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
@@ -25,6 +25,10 @@
       loadImage() {
         //使用事件总线发射一个事件到总线中，必须在main.js里进行原型new
         this.$bus.$emit('itemloadImage')
+      },
+      itemClick() {
+        // console.log(this.goodsItem.iid)
+        this.$router.push('/detail/' + this.goodsItem.iid)
       }
     }
   }
