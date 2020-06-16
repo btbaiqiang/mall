@@ -8,7 +8,6 @@
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
   export default {
     name: 'Category',
     data() {
@@ -20,14 +19,5 @@
 </script>
 
 <style>
-  
-  .wrapper {
-    height: 150px;
-    background-color: red;
-
-   
-
-    /*overflow-y: scroll;*/
-  }
 
 </style>
