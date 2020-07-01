@@ -11,11 +11,12 @@
             :probeType="3" 
             @scroll="contentScroll"
             :pullUpLoad="true"
+            :changeClick="true"
             @pullingUp="loadMore"> 
       <home-swiper :banners="banners" @swiperImageLoad='swiperImageLoad' />
       <recommend-view :recommends="recommends" />
       <feature-view/>
-      <tab-control  class="tab-control" 
+      <tab-control  :class="{fixed: isTabFixed}" 
                     :titles="['流行','新款','精选']"
                     @tabClick="tabClick" 
                     ref="tabControl2" />
@@ -32,14 +33,14 @@
   import Scroll from 'components/common/scroll/Scroll'
   import TabControl from 'components/content/tabControl/TabControl'
   import GoodsList from 'components/content/goods/GoodsList'
-  import BackTop from 'components/content/backTop/BackTop'
+  // import BackTop from 'components/content/backTop/BackTop'
   //子组件
   import HomeSwiper from './childComps/HomeSwiper'
   import RecommendView from './childComps/RecommendView'
   import FeatureView from './childComps/FeatureView'
   //常用方法
   import {getHomeMultidata, getHomeGoods} from 'network/home'
-  import {debounce} from 'common/utils'
+  import {itemListenerMixin, backTopMixin} from 'common/mixin'
   
 
   export default {
@@ -49,11 +50,12 @@
       Scroll,
       TabControl,
       GoodsList,
-      BackTop,
       HomeSwiper,
       RecommendView,
       FeatureView,
     },
+    //利用vue里的混入
+    mixins: [itemListenerMixin, backTopMixin],
     // 他用data()接收promise返回的数据
     data() {
       return {
@@ -68,10 +70,11 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        isShowBackTop: false,
+        // isShowBackTop: false,
         tabOffsetTop: 0,
         isTabFixed: false,
         saveY: 0,
+        
       }
     },
     //页面创建时使用生命周期函数发起请求
@@ -96,25 +99,39 @@
       this.getHomeGoods('sell')
     },
     mounted() {
+      //利用混入传入如下代码
        //3、监听item中图片加载完成/利用事件总线接收其他组件中发出来的事件
-      const refresh = this.debounce(this.$refs.scroll.refresh, 50)
-      this.$bus.$on('itemloadImage', () => {
-        refresh()
-      })
+      // let newRefresh = debounce(this.$refs.scroll.refresh, 100)
+
+      // // 对监听的事件进行保存
+      // this.itemImageListener = () => {
+      //     // console.log('我是混入对象')
+      //     newRefresh()
+      // }
+      // this.$bus.$on('itemloadImage', this.itemImageListener)
+        },
+    destroyed() {
+      console.log('home destroyed')
+    },
+    activated() {
+      //激活回到刚才的位置
+      this.$refs.scroll.refresh()
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+      // console.log(this.saveY)
+      //滚动刷新
+      
+    },
+    deactivated() {
+      //释放时记录Y轴的位置
+      this.saveY = this.$refs.scroll.getScrollY()
+      // console.log(this.saveY) 
+      // 2、取消全局事件监听
+      this.$bus.$off('itemloadImage', this.itemImageListener)
     },
     methods: {
       /**
        *事件监听的相关方法
        */
-      debounce(func, delay) {
-        let timer = null
-        return function (...args) {
-          if (timer) clearTimeout(timer)
-          timer = setTimeout(() => {
-            func.apply(this,args)     
-          }, delay)
-        }
-      },
       
       //监听TabControl组件传过来的事件数据
       tabClick(index) {
@@ -133,13 +150,13 @@
         this.$refs.tabControl2.currentIndex = index;
       },
       //BackTop回到顶部
-      backClick() {
-        this.$refs.scroll.scrollTo(0, 0, 800)
-      },
+      // backClick() {
+      //   this.$refs.scroll.scrollTo(0, 0, 800)
+      // },
       //BackTop组件的显示与隐藏
       contentScroll(position) {
         // 1、判断BackTop是否显示
-        this.isShowBackTop = (-position.y) > 1000
+        this.listenShowBackTop(position)
         
         //2、决定tabControl是否吸顶(position: fixed) 
         this.isTabFixed = (-position.y) > this.tabOffsetTop
@@ -187,40 +204,37 @@
         return this.goods[this.currentType].list
       }
     },
-    destroyed() {
-      console.log('home destroyed')
-    },
-    activated() {
-      //激活回到刚才的位置
-      this.$refs.scroll.scrollTo(0, this.saveY, 0)
-      //滚动刷新
-      this.$refs.scroll.refresh()
-    },
-    deactivated() {
-      //释放时记录Y轴的位置
-      this.saveY = this.$refs.scroll.getScrollY()
-    },
   }
 </script>
 
 <style scoped>
   #home {
-    padding-top: 44px;
+    /**
+    * 有了BS之后，可以不需要这2个 
+    * padding-top: 44px;
+    * padding-bottom: 49px;
+    * 下方BS的.wrapper样式里就有 top44 bottom49
+    */
+    /* 一定要有home的高度，否则其子对象wrapper无法正确显示 */
     height: 100vh;
+    position: relative;
   }
-
   .home-nav {
     background-color: var(--color-tint);
     color: #fff;
-    /** 使用浏览器原生滚动使用的样式。*/
-    position: fixed;
+    /* 使用浏览器原生滚动 */
+    /* position: fixed;
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
-    
+    z-index: 9; */
   }
-  
+
+  .tab-control {
+    position: relative;
+    z-index: 9;
+  }
+
   .content {
     overflow: hidden;
 
@@ -231,9 +245,10 @@
     right: 0;
   }
 
-  .tab-control {
-    position: relative;
-    z-index: 9;
+  .fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 44px;
   }
-
 </style>

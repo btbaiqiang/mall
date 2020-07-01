@@ -1,6 +1,6 @@
 <template>
   <div id="detail-nav-bar">
-    <nav-bar>
+    <nav-bar class="nav-bar">
       <div slot="left" class="back" @click="backClick">
         <img src="~assets/img/common/back.svg" alt="">
       </div>
@@ -33,6 +33,9 @@ export default {
   methods: { 
     titleClick(index) {
       this.currentIndex = index
+      //发出点击事件监听顶部标题的变化 
+      // console.log(index)
+      this.$emit('titleClick', index)
     },
     backClick() {
       //使用$router返回上一页
@@ -43,6 +46,12 @@ export default {
 </script>
 
 <style scoped>
+  .nav-bar {
+    position: relative;
+    z-index: 9;
+    background-color: #fff;
+  }
+
   .title {
     display: flex;
     font-size: 13px;

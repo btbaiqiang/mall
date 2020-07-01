@@ -8,6 +8,13 @@ export function getDetail(iid) {
   })
 }
 
+//请求详情页推荐商品数据
+export function getRecommend() {
+  return request({
+     url: '/recommend' 
+  })
+}
+
 //封装一个类保存商品的信息
 export class Goods {
   constructor(itemInfo, columens, services) {
@@ -23,3 +30,5 @@ export class Goods {
     this.services = services
   }
 }
+
+//商家店铺信息

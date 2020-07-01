@@ -18,7 +18,11 @@
       pullUpLoad: {
         type: Boolean,
         default: false
-      } 
+      },
+      changeClick: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {
@@ -28,10 +32,12 @@
     mounted() {
       //1、创建BSscroll对象
       this.scroll = new BScroll(this.$refs.wrapper, {
+        // 配置BScroll参数
         //控制DIV元素是否可以点击
-        click: true,
+        click: this.changeClick,
         // probeType有三种监听模式0，1，2，3
         probeType: this.probeType,
+        // 开启上拉加载更多
         pullUpLoad: this.pullUpLoad
       })
 
@@ -60,6 +66,7 @@
         this.scroll && this.scroll.finishPullUp()
       },
       refresh() {
+        // console.log('--------')
         this.scroll && this.scroll.refresh()
       },
       getScrollY() {

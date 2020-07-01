@@ -2,7 +2,7 @@
   <div id="detail_goods" v-if="Object.keys(goods).length != 0">
     <div class="title">{{ goods.title }}</div>
 
-    <div class="info">
+    <div class="price-info">
       <span class="n_price">{{ goods.newPrice }}</span>
       <del>
         <span class="o_price">{{ goods.oldPrice }}</span>
@@ -47,7 +47,7 @@ export default {
 .title {
   font-size: 0.768rem;
 }
-.info {
+.price-info {
   margin: 0.42rem 0;
 }
 .n_price {
