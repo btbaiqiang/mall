@@ -1,6 +1,6 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="" @load="loadImage">
+  <div class="goods-item" @click="itemClick">
+    <img :src="showImage" alt="" @load="loadImage">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -20,11 +20,29 @@
         }
       }
     },
+    computed: {
+      showImage() {
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+    },
     methods: { 
       // 监听图片加载完成
       loadImage() {
         //使用事件总线发射一个事件到总线中，必须在main.js里进行原型new
         this.$bus.$emit('itemloadImage')
+        // if (this.$route.path.indexOf('/home')) {
+        //   this.$bus.$emit('itemloadImage')
+        // }
+        
+      },
+      itemClick() {
+        // console.log(this.goodsItem)
+        if (this.goodsItem.iid) {
+          this.$router.push('/detail/' + this.goodsItem.iid)
+        }else {
+          this.$router.push('/detail/' + this.goodsItem.item_id)
+        }
+         
       }
     }
   }
@@ -79,3 +97,24 @@
     background: url("~assets/img/common/collect.svg") 0 0/14px 14px;
   }
 </style>
+
+
+    //  loadImage() {
+    //     //使用事件总线发射一个事件到总线中，必须在main.js里进行原型new
+    //     根据路由发出不同地
+    //     if (this.$route.path.indexOf('/home')) {
+    //       this.$bus.$emit('homeItemloadImage')
+    //     }else if (this.$route.indexOf('/detail')) {
+    //       this.$bus.$emit('detailItemloadImage')
+    //     }
+        
+    //   },
+    //   itemClick() {
+    //     console.log(this.goodsItem)
+    //     if (this.goodsItem.iid) {
+    //       this.$router.push('/detail/' + this.goodsItem.iid)
+    //     }else {
+    //       this.$router.push('/detail/' + this.goodsItem.item_id)
+    //     }
+         
+    //   }

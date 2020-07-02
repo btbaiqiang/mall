@@ -18,7 +18,11 @@
       pullUpLoad: {
         type: Boolean,
         default: false
-      } 
+      },
+      changeClick: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {
@@ -28,27 +32,28 @@
     mounted() {
       //1、创建BSscroll对象
       this.scroll = new BScroll(this.$refs.wrapper, {
+        // 配置BScroll参数
         //控制DIV元素是否可以点击
-        click: true,
+        click: this.changeClick,
         // probeType有三种监听模式0，1，2，3
         probeType: this.probeType,
+        // 开启上拉加载更多
         pullUpLoad: this.pullUpLoad
       })
 
       //2、监听滚动的位置
-      if (probeType === 2 || probeType ===3) {
+      if (this.probeType ===2 || this.probeType === 3) {
         this.scroll.on('scroll', (position) => {
-          // console.log(position)
-          this.$emit('scroll', position)
-        })
+        // console.log(position)
+        this.$emit('scroll', position)
+      })
       }
-      
 
       //3、监听上拉事件
-      if (pullUpLoad) {
+      if (this.pullUpLoad) {
         this.scroll.on('pullingUp', () => {
-          // console.log('上拉加载更多')
-          this.$emit('pullingUp')
+        // console.log('上拉加载更多')
+        this.$emit('pullingUp')
       })
       }
       
@@ -61,9 +66,12 @@
         this.scroll && this.scroll.finishPullUp()
       },
       refresh() {
-        // console.log('**********')
+        // console.log('--------')
         this.scroll && this.scroll.refresh()
       },
+      getScrollY() {
+        return this.scroll ? this.scroll.y : 0
+      }
     },
   }
 </script>
