@@ -33,6 +33,7 @@
   import FeatureView from './childComps/FeatureView'
   //常用方法
   import {getHomeMultidata, getHomeGoods} from 'network/home'
+  import {debounce} from 'common/utils'
   
 
   export default {
@@ -87,15 +88,17 @@
     },
     mounted() {
        //3、监听item中图片加载完成/利用事件总线接收其他组件中发出来的事件
+      const refresh = debounce(this.$refs.scroll.refresh, 200)
       this.$bus.$on('itemloadImage', () => {
-        this.$refs.scroll.refresh()
+        // console.log('***************')
+        refresh()
       })
     },
     methods: {
       /**
        *事件监听的相关方法
        */
-
+      
       //监听TabControl组件传过来的事件数据
       tabClick(index) {
         switch(index) {
@@ -124,8 +127,6 @@
         // console.log('加载更多')
         //调用网络请求函数并传入当前监听的类型
         this.getHomeGoods(this.currentType)
-
-        // this.$refs.scroll.scroll.refresh()
       },
 
       /**
@@ -173,12 +174,6 @@
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
-  }
-
-  .tab-control {
-    position: sticky;
-    top: 44px;
     z-index: 9;
   }
 

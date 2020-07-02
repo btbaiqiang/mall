@@ -36,16 +36,22 @@
       })
 
       //2、监听滚动的位置
-      this.scroll.on('scroll', (position) => {
-        // console.log(position)
-        this.$emit('scroll', position)
-      })
+      if (probeType === 2 || probeType ===3) {
+        this.scroll.on('scroll', (position) => {
+          // console.log(position)
+          this.$emit('scroll', position)
+        })
+      }
+      
 
       //3、监听上拉事件
-      this.scroll.on('pullingUp', () => {
-        // console.log('上拉加载更多')
-        this.$emit('pullingUp')
+      if (pullUpLoad) {
+        this.scroll.on('pullingUp', () => {
+          // console.log('上拉加载更多')
+          this.$emit('pullingUp')
       })
+      }
+      
     },
     methods: { 
       scrollTo(x, y, time=500) {
@@ -55,6 +61,7 @@
         this.scroll && this.scroll.finishPullUp()
       },
       refresh() {
+        // console.log('**********')
         this.scroll && this.scroll.refresh()
       },
     },
