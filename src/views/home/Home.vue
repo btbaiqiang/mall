@@ -235,12 +235,12 @@
 
   .content {
     overflow: hidden;
-
+    height: calc(100% - 44px - 49px);
     position: absolute;
-    top: 44px;
+    /* top: 44px;
     bottom: 49px;
     left: 0;
-    right: 0;
+    right: 0; */
   }
 
   .fixed {

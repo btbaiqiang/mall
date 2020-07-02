@@ -7,6 +7,7 @@ export default {
     let product = context.state.cartList.find(item => item.iid === payload.iid)
     // 判断oldProduct是否有值
     if (product) {
+      console.log(product)
       // product.count += 1
       context.commit(ADD_COUNTER, product)
     } else {
