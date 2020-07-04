@@ -1,92 +1,95 @@
 <template>
-  <div class="cart_list_item">
-    <!-- <cart-check-button
-      @click.native="checkClick"
-      :isChecked="item.checked"
-      ref="checkButtonRef"
-    /> -->
-    <div class="item_img" @click="checkClick">
-      <img :src="item.image" alt="" />
+  <div id="shop-item">
+    <div class="item-selector">
+      <CheckButton :isChecked="itemInfo.checked" @click.native="checkedChange"/>
     </div>
-    <div class="item_info" @click="infoClick(item)">
-      <p class="item_title">{{ item.title }}</p>
-      <p class="item_desc">{{ item.desc }}</p>
-      <span class="item_price">￥{{ item.price }}</span>
-      <span class="item_count">x{{ item.count }}</span>
+    <div class="item-img">
+      <img :src="itemInfo.image" alt="商品图片">
+    </div>
+    <div class="item-info">
+      <div class="item-title">{{itemInfo.title}}</div>
+      <div class="item-desc">商品描述: {{itemInfo.desc}}</div>
+      <div class="info-bottom">
+        <div class="item-price left">¥{{itemInfo.price}}</div>
+        <div class="item-count right">x{{itemInfo.count}}</div>
+      </div>
     </div>
   </div>
 </template>
+
 <script>
-// import CartCheckButton from "./CartCheckButton.vue";
-export default {
-  name: 'CartListItem',
-  props: {
-    item: Object
-  },
-  methods: {
-    checkClick() {
-      this.item.checked = !this.item.checked;
+  import CheckButton from './CheckButton'
+  export default {
+    name: "CartItem",
+    props: {
+      itemInfo: {
+        type: Object,
+        default() {
+          return {}
+        }
+      }
     },
-    //信息点击事件
-    infoClick(item) {
-      this.$router.push("/detail/" + item.iid);
+    components: {
+      CheckButton
+    },
+    methods: {
+      checkedChange() {
+        // console.log('-------')
+        this.itemInfo.checked = !this.itemInfo.checked;
+      }
     }
-  },
-  // components: {
-  //   CartCheckButton
-  // }
-};
+  }
 </script>
 
 <style scoped>
-.cart_list_item {
-  width: 100%;
-  height: 5.5rem;
-  border-bottom: 0.04rem solid rgba(128, 128, 128, 0.4);
-  display: flex;
-  padding: 0.4rem;
-  padding-left: 0rem;
-}
-.item_img {
-  width: 3.5rem;
-  height: 100%;
-}
-.item_img img {
-  width: 100%;
-  height: 100%;
-  border-radius: 0.4rem;
-}
-.item_info {
-  position: relative;
-  width: calc(100% - 3.5rem - 1.2rem - 0.4rem);
-  margin-left: 0.4rem;
-}
-.item_info p {
-  display: inline-block;
-  width: 100%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.item_title {
-  font-size: 0.75rem;
-  padding-bottom: 0.5rem;
-}
-.item_desc {
-  font-size: 0.6rem;
-  color: gray;
-}
-.item_price {
-  position: absolute;
-  left: 0;
-  bottom: 0.4rem;
-  font-size: 0.75rem;
-  color: orangered;
-}
-.item_count {
-  position: absolute;
-  right: 0.4rem;
-  bottom: 0.4rem;
-  font-size: 0.75rem;
-}
+  #shop-item {
+    width: 100%;
+    display: flex;
+    font-size: 0;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+  }
+  .item-selector {
+    width: 14%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .item-title, .item-desc {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .item-img {
+    padding: 5px;
+    /*border: 1px solid #ccc;*/
+  }
+  .item-img img {
+    width: 80px;
+    height: 100px;
+    display: block;
+    border-radius: 5px;
+  }
+  .item-info {
+    font-size: 17px;
+    color: #333;
+    padding: 5px 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .item-info .item-desc {
+    font-size: 14px;
+    color: #666;
+    margin-top: 15px;
+  }
+  .info-bottom {
+    margin-top: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+  }
+  .info-bottom .item-price {
+    color: orangered;
+  }
 </style>

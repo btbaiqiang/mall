@@ -1,15 +1,16 @@
 <template>
   <div class="cart">
-    <!-- 导航 -->
+    <!-- 购物导航 -->
     <nav-bar class="nav-bar">
       <div slot="center">购物车({{length}})</div>
     </nav-bar>
-    <!-- 商品的列表 -->
-    <scroll class="content" ref="scroll">
+    <!-- 商品的列表 可滚动区域-->
+    <scroll class="content" ref="scroll" :changeClick=true>
       <cart-list></cart-list>
     </scroll>
       
     <!-- 底部数据汇总 -->
+    <cart-bottom-bar></cart-bottom-bar>
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import Scroll from 'components/common/scroll/Scroll'
 import NavBar from 'components/common/navbar/NavBar'
 
 import CartList from './childComps/CartList'
+import CartBottomBar from './childComps/CartButtonBar'
 
 import {mapGetters} from 'vuex'
 
@@ -26,6 +28,7 @@ export default {
   components: {
     NavBar,
     CartList,
+    CartBottomBar,
     Scroll
   },
 
@@ -37,7 +40,6 @@ export default {
     })
   },
   activated() {
-    console.log('--------------')
     this.$refs.scroll.refresh()
   }
 }
@@ -56,8 +58,8 @@ export default {
   }
 
    .content {
-    background-color: #fff;
-    height: calc(100% - 44px - 49px);
+    /* background-color: #fff; */
+    height: calc(100% - 44px - 49px - 40px);
     overflow: hidden;
   }
 </style>
